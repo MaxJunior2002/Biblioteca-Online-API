@@ -4,6 +4,27 @@ import TokenHelper from "../helpers/TokenHelper.js";
 
 class UsuarioController {
 
+    static buscaDadosUsuario = async (req, res) => {
+        
+        if(!TokenHelper.verificaToken(req)){
+            return res.status(400).send({message: 'Token inválido'});
+        }
+
+        const id = req.params.id;
+
+        const usuario = await Usuario.findById(id, "-password");
+
+        if(!usuario){
+            return res.status(404).send({message: 'Usuário não encontrado'});
+        }
+
+        try{
+            res.status(200).send({usuario});
+        }catch(erro){
+            res.status(500).send({message:`${erro.message} - Falha ao buscar dados`})
+        }
+    }
+
     static cadastrarUsuario = async (req, res) => {
         let {nome, email, password} = req.body;
         

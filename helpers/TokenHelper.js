@@ -15,6 +15,13 @@ class TokenHelper{
 
         return token;
     }
+
+    static async verificaToken(req){
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+
+        return jsonwebtoken.verify(token, secret);
+    }
 }
 
 export default TokenHelper;
