@@ -8,6 +8,10 @@ class SenhaHelper{
 
         return passwordHash;
     }
+
+    static async verificaSenha(bodyPassword, userPassword){
+        return bcrypt.compare(bodyPassword, userPassword);
+    }
 }
 
 export default SenhaHelper;

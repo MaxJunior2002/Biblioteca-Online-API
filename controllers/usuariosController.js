@@ -1,5 +1,6 @@
 import Usuario from "../models/Usuario.js"
 import SenhaHelper from "../helpers/SenhaHelper.js";
+import TokenHelper from "../helpers/TokenHelper.js";
 
 class UsuarioController {
 
@@ -23,6 +24,38 @@ class UsuarioController {
                 res.status(201).send(usuario.toJSON());
             }
         })
+    }
+
+    static login = async (req, res) => {
+        const {email, password} = req.body;
+
+        if(!email){
+            return res.status(422).send({message: "Email obrigatorio!"});
+        }
+        if(!password){
+            return res.status(422).send({message: "Senha obrigatoria!"});
+        }
+
+        const usuario = await Usuario.findOne({email: email});
+
+        if(!usuario){
+            return res.status(404).send({message: 'Usuário não encontrado'});
+        }
+
+        const verificaSenha = await SenhaHelper.verificaSenha(password, usuario.password);
+
+        if(!verificaSenha){
+            return res.status(422).send({message: 'Senha inválida!'});
+        }
+
+        try{
+            
+            const token = await TokenHelper.geraToken(usuario._id);
+
+            res.status(200).json({message: 'Login realizado com sucesso!', token});
+        }catch(erro){
+            res.status(500).send({message: `${erro.message} - falha ao realizar login`});
+        }
     }
 }
 
