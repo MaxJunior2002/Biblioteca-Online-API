@@ -78,6 +78,42 @@ class UsuarioController {
             res.status(500).send({message: `${erro.message} - falha ao realizar login`});
         }
     }
+
+    static atualizaUsuario = async (req, res) => {
+        let testeToken = await TokenHelper.verificaToken(req);
+        if(!testeToken){
+            return res.status(400).send({message: 'Token inválido'});
+        }
+
+        if(req.body.password){
+            req.body.password = await SenhaHelper.criaSenha(req.body.password);
+        }
+
+        const id = req.params.id;
+        Usuario.findByIdAndUpdate(id, {$set: req.body}, (erro)=> {
+            if(!erro){
+                res.status(204).send({message: 'Usuario atualizado com sucesso!'});
+            }else{
+                res.status(500).send({message: `${erro.message} - Não foi possivel atualizar o usuario.`})
+            }
+        })
+    }
+
+    static deletaUsuario = async (req, res) => {
+        let testeToken = await TokenHelper.verificaToken(req);
+        if(!testeToken){
+            return res.status(400).send({message: 'Token inválido'});
+        }
+
+        let id = req.params.id;
+        Usuario.findByIdAndDelete(id, (erro) => {
+            if(erro){
+                res.status(500).send({message: `${erro.message} - Não foi possivel deletar o usuario`});
+            }else{
+                res.status(202).send({message: 'Usuario deletado com sucesso!'});
+            }
+        })
+    }
 }
 
 export default UsuarioController;
