@@ -5,8 +5,8 @@ import TokenHelper from "../helpers/TokenHelper.js";
 class UsuarioController {
 
     static buscaDadosUsuario = async (req, res) => {
-        
-        if(!TokenHelper.verificaToken(req)){
+        let testeToken = await TokenHelper.verificaToken(req);
+        if(!testeToken){
             return res.status(400).send({message: 'Token inválido'});
         }
 

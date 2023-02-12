@@ -20,7 +20,15 @@ class TokenHelper{
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
 
-        return jsonwebtoken.verify(token, secret);
+        let correto = true;
+
+        jsonwebtoken.verify(token, secret, (erro, decoded) => {
+
+            if(erro){
+                correto = false;
+            }
+        })
+        return correto;
     }
 }
 
