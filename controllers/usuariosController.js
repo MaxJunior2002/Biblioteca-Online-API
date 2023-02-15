@@ -94,7 +94,7 @@ class UsuarioController {
             if(!erro){
                 res.status(204).send({message: 'Usuario atualizado com sucesso!'});
             }else{
-                res.status(500).send({message: `${erro.message} - Não foi possivel atualizar o usuario.`})
+                res.status(500).send({message: `${erro.message} - Não foi possivel atualizar o usuario.`});
             }
         })
     }
