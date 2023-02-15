@@ -1,7 +1,6 @@
 import Livro from "../models/Livro.js";
 import Usuario from "../models/Usuario.js"
 import TokenHelper from "../helpers/TokenHelper.js";
-import livro from "../models/Livro.js";
 
 class LivroController{
     static buscaLivroPorTitulo = async (req, res) => {

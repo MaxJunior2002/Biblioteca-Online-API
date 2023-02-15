@@ -73,7 +73,7 @@ class UsuarioController {
             
             const token = await TokenHelper.geraToken(usuario._id);
 
-            res.status(200).json({message: 'Login realizado com sucesso!', token});
+            res.status(200).json({message: 'Login realizado com sucesso!', token, id: usuario._id});
         }catch(erro){
             res.status(500).send({message: `${erro.message} - falha ao realizar login`});
         }
