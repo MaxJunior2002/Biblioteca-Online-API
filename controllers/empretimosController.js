@@ -8,10 +8,7 @@ class EmprestimoController{
 
         let data = await DataHelper.geraData();
 
-        let testeToken = await TokenHelper.verificaToken(req);
-        if(!testeToken){
-            return res.status(400).send({message: 'Token inválido'});
-        }
+        await TokenHelper.verificaToken(req, res);
 
         const emprestimo = new Emprestimo({livro, emprestado, dono, data});
 
