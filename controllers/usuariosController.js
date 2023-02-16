@@ -61,7 +61,7 @@ class UsuarioController {
         const id = req.params.id;
         Usuario.findByIdAndUpdate(id, {$set: req.body}, (erro)=> {
             if(!erro){
-                res.status(204).send({message: 'Usuario atualizado com sucesso!'});
+                res.status(202).send({message: 'Usuario atualizado com sucesso!'});
             }else{
                 res.status(500).send({message: `${erro.message} - Não foi possivel atualizar o usuario.`});
             }

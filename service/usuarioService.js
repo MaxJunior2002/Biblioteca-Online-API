@@ -1,5 +1,4 @@
 import Usuario from "../models/Usuario.js"
-import SenhaHelper from "../helpers/SenhaHelper.js";
 import TokenHelper from "../helpers/TokenHelper.js";
 
 class UsuarioService {

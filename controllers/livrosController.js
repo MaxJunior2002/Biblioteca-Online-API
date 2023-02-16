@@ -1,21 +1,12 @@
 import Livro from "../models/Livro.js";
 import Usuario from "../models/Usuario.js"
 import TokenHelper from "../helpers/TokenHelper.js";
+import LivroService from "../service/livroService.js";
+import UsuarioService from "../service/usuarioService.js";
 
 class LivroController{
     static buscaLivroPorTitulo = async (req, res) => {
-        let testeToken = await TokenHelper.verificaToken(req);
-        if(!testeToken){
-            return res.status(400).send({message: 'Token inválido'});
-        }
-
-        const titulo = req.body.titulo;
-
-        const livro = await Livro.findOne({titulo: titulo});
-
-        if(!livro){
-            return res.status(404).send({message: 'Livro não encontrado'});
-        }
+        const livro = await LivroService.buscaDados(req, res);
 
         try{
             res.status(200).send({livro});
@@ -25,18 +16,9 @@ class LivroController{
     }
 
     static buscaLivroPorId = async (req, res) => {
-        let testeToken = await TokenHelper.verificaToken(req);
-        if(!testeToken){
-            return res.status(400).send({message: 'Token inválido'});
-        }
-
         let id = req.params.id;
 
-        const livro = await Livro.findById(id);
-
-        if(!livro){
-            return res.status(404).send({message: 'Livro não encontrado'});
-        }
+        const livro = await LivroService.buscaDados(req, res, id);
 
         try{
             res.status(200).send({livro});
@@ -48,19 +30,12 @@ class LivroController{
     static cadastraLivro = async (req, res) => {
         let {titulo, resumo} = req.body;
 
-        let testeToken = await TokenHelper.verificaToken(req);
-        if(!testeToken){
-            return res.status(400).send({message: 'Token inválido'});
-        }
+        await TokenHelper.verificaToken(req, res);
 
         const id = req.params.id;
 
-        const usuario = await Usuario.findById(id, "-password");
+        const usuario = await UsuarioService.buscaDados(id, req, res);
         let proprietario = usuario.nome;
-
-        if(!usuario){
-            return res.status(404).send({message: "Usuário não encontrado"});
-        }
 
         const livro = new Livro({titulo, resumo, proprietario});
 
@@ -74,27 +49,21 @@ class LivroController{
     }
 
     static atualizaLivro = async (req, res) => {
-        let testeToken = await TokenHelper.verificaToken(req);
-        if(!testeToken){
-            return res.status(400).send({message: 'Token inválido'});
-        }
+        await TokenHelper.verificaToken(req, res);
 
         const id = req.params.id;
 
         Livro.findByIdAndUpdate(id,{$set: req.body}, (erro) => {
-            if(erro){
-                res.status(500).send({message: `${erro.message} - Não foi possivel atualizar o livro.`});
+            if(!erro){
+                res.status(202).send({message: "Livro atualizado com sucesso!"});
             }else{
-                res.status(204).send({message: "Livro atualizado com sucesso!"});
+                res.status(500).send({message: `${erro.message} - Não foi possivel atualizar o livro.`});
             }
         })
     }
 
     static deletaLivro = async (req, res) => {
-        let testeToken = await TokenHelper.verificaToken(req);
-        if(!testeToken){
-            return res.status(400).send({message: 'Token inválido'});
-        }
+        await TokenHelper.verificaToken(req, res);
 
         const id = req.params.id;
 
