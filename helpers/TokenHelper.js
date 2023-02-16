@@ -16,7 +16,7 @@ class TokenHelper{
         return token;
     }
 
-    static async verificaToken(req){
+    static async verificaToken(req, res){
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
 
@@ -28,7 +28,10 @@ class TokenHelper{
                 correto = false;
             }
         })
-        return correto;
+        
+        if(!correto){
+            return res.status(400).send({message: 'Token inválido'});
+        }
     }
 }
 

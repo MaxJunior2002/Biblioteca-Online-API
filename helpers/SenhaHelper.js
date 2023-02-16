@@ -9,8 +9,10 @@ class SenhaHelper{
         return passwordHash;
     }
 
-    static async verificaSenha(bodyPassword, userPassword){
-        return bcrypt.compare(bodyPassword, userPassword);
+    static async verificaSenha(res, bodyPassword, userPassword){
+        if(!bcrypt.compare(bodyPassword, userPassword)){
+            return res.status(422).send({message: 'Senha inválida!'});
+        }
     }
 }
 

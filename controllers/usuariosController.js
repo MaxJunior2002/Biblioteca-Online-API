@@ -1,22 +1,14 @@
 import Usuario from "../models/Usuario.js"
 import SenhaHelper from "../helpers/SenhaHelper.js";
 import TokenHelper from "../helpers/TokenHelper.js";
+import UsuarioService from "../service/usuarioService.js";
 
 class UsuarioController {
 
     static buscaDadosUsuario = async (req, res) => {
-        let testeToken = await TokenHelper.verificaToken(req);
-        if(!testeToken){
-            return res.status(400).send({message: 'Token inválido'});
-        }
-
         const id = req.params.id;
 
-        const usuario = await Usuario.findById(id, "-password");
-
-        if(!usuario){
-            return res.status(404).send({message: 'Usuário não encontrado'});
-        }
+        const usuario = await UsuarioService.buscaDados(id, req, res);
 
         try{
             res.status(200).send({usuario});
@@ -27,16 +19,11 @@ class UsuarioController {
 
     static cadastrarUsuario = async (req, res) => {
         let {nome, email, password} = req.body;
-        
         password = await SenhaHelper.criaSenha(password);
 
+        await UsuarioService.verificaUsuario(req, res);
+
         const usuario = new Usuario({nome, email, password});
-
-        const usuarioExiste = await Usuario.findOne({email: usuario.email});
-
-        if(usuarioExiste){
-            return res.status(422).send({message: 'Usuário já existe'});
-        }
 
         usuario.save((err) => {
             if(err){
@@ -50,24 +37,9 @@ class UsuarioController {
     static login = async (req, res) => {
         const {email, password} = req.body;
 
-        if(!email){
-            return res.status(422).send({message: "Email obrigatorio!"});
-        }
-        if(!password){
-            return res.status(422).send({message: "Senha obrigatoria!"});
-        }
+        const usuario = await UsuarioService.verificaUsuario(req, res, true);
 
-        const usuario = await Usuario.findOne({email: email});
-
-        if(!usuario){
-            return res.status(404).send({message: 'Usuário não encontrado'});
-        }
-
-        const verificaSenha = await SenhaHelper.verificaSenha(password, usuario.password);
-
-        if(!verificaSenha){
-            return res.status(422).send({message: 'Senha inválida!'});
-        }
+        await SenhaHelper.verificaSenha(res, password, usuario.password);
 
         try{
             
@@ -80,10 +52,7 @@ class UsuarioController {
     }
 
     static atualizaUsuario = async (req, res) => {
-        let testeToken = await TokenHelper.verificaToken(req);
-        if(!testeToken){
-            return res.status(400).send({message: 'Token inválido'});
-        }
+        await TokenHelper.verificaToken(req, res);
 
         if(req.body.password){
             req.body.password = await SenhaHelper.criaSenha(req.body.password);
@@ -100,10 +69,7 @@ class UsuarioController {
     }
 
     static deletaUsuario = async (req, res) => {
-        let testeToken = await TokenHelper.verificaToken(req);
-        if(!testeToken){
-            return res.status(400).send({message: 'Token inválido'});
-        }
+        await TokenHelper.verificaToken(req, res);
 
         let id = req.params.id;
         Usuario.findByIdAndDelete(id, (erro) => {
