@@ -27,6 +27,16 @@ class LivroController{
         }
     }
 
+    static buscarTodos = async (req, res) => {
+        const livros = await LivroService.buscarTodos(req, res);
+
+        try{
+            res.status(200).send({livros});
+        }catch(erro){
+            res.status(500).send({message: `${erro.message} - Falha ao buscar dados`});
+        }
+    }
+
     static cadastraLivro = async (req, res) => {
         let {titulo, resumo} = req.body;
 

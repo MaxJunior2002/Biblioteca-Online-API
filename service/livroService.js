@@ -19,6 +19,20 @@ class LivroService {
         }
         return livro;
     }
+
+    static buscarTodos = async (req, res) => {
+        await TokenHelper.verificaToken(req, res);
+
+        let livros = {};
+
+        try{
+            livros = await Livro.find();
+
+        }catch(erro){
+            return res.status(404).send({message: `${erro.message} -  Não foi possivel buscar os livros.`});
+        }
+        return livros;
+    }
 }
 
 export default LivroService;
