@@ -2,10 +2,12 @@ import TokenHelper from "../helpers/TokenHelper.js";
 import Emprestimo from "../models/Emprestimo.js";
 
 class EmprestimoService{
-    static BuscaPorId = (req, res) => {
+    static BuscaPorId = async (req, res) => {
         let id = req.params.id;
 
-        const emprestimo = Emprestimo.findById(id);
+        await TokenHelper.verificaToken(req, res);
+
+        const emprestimo = await Emprestimo.findById(id);
 
         if(!emprestimo){
             return res.status(404).send({message: 'Emprestimo não encontrado'});

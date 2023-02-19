@@ -39,7 +39,7 @@ class LivroService {
 
         let livros = {};
         try{
-            livros = Livro.find({proprietario: req.body.proprietario});
+            livros = await Livro.find({proprietario: req.body.proprietario});
         }catch(erro){
             return res.status(404).send({message: `${erro.message} - Não foi possivel encontrar os livros.`});
         }
