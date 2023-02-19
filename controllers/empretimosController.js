@@ -5,13 +5,43 @@ import EmprestimoService from "../service/emprestimoService.js";
 
 class EmprestimoController{
 
+    static buscaEmprestimos = async (req, res) => {
+        const emprestimos = await EmprestimoService.buscarTodos(req, res);
+
+        try{
+            res.status(200).send({emprestimos});
+        }catch(erro){
+            res.status(500).send({message: `${erro.message} - Não foi possivel buscar os emprestimos`});
+        }
+    }
+
     static buscaEmprestimoPorId = async (req, res) => {
-        const emprestimo = await EmprestimoService.BuscaPorId(req, res);
+        const emprestimo = await EmprestimoService.buscaPorId(req, res);
 
         try{
             res.status(200).send({emprestimo});
         }catch(erro){
             res.status(500).send({message: `${erro.message} - Não foi possivel localizar o emprestimo`});
+        }
+    }
+
+    static buscaEmprestimoPorDono = async (req, res) => {
+        const emprestimos = await EmprestimoService.buscarPorDono(req, res);
+
+        try{
+            res.status(200).send({emprestimos});
+        }catch(erro){
+            res.status(500).send({message: `${erro.message} - Não foi possivel localizar os emprestimos`});
+        }
+    }
+
+    static buscaEmprestimoPorEmprestado = async (req, res) => {
+        const emprestimo = await EmprestimoService.buscarPorEmprestado(req, res);
+
+        try{
+            res.status(200).send({emprestimo});
+        }catch(erro){
+            res.status(500).send({message: `${erro.message} - Não foi possivel localizar os emprestimos`});
         }
     }
 
