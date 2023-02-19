@@ -1,6 +1,7 @@
 import Emprestimo from "../models/Emprestimo.js";
 import TokenHelper from "../helpers/TokenHelper.js";
-import DataHelper from "../helpers/DataHelper.js"
+import DataHelper from "../helpers/DataHelper.js";
+import EmprestimoService from "../service/emprestimoService.js";
 
 class EmprestimoController{
     static criaEmprestimo = async (req, res) => {

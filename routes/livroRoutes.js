@@ -4,10 +4,11 @@ import LivroController from "../controllers/livrosController.js";
 const router = express.Router();
 
 router
-    .get("/livros", LivroController.buscaLivroPorTitulo)
+    .get("/livros/usuarios/all", LivroController.buscarTodosDoUsuario)
     .get("/livros/all", LivroController.buscarTodos)
     .get("/livros/:id", LivroController.buscaLivroPorId)
-    .post("/livros/usuario/:id", LivroController.cadastraLivro)
+    .get("/livros", LivroController.buscaLivroPorTitulo)
+    .post("/livros/usuarios/:id", LivroController.cadastraLivro)
     .put("/livros/:id", LivroController.atualizaLivro)
     .delete("/livros/:id", LivroController.deletaLivro)
 
