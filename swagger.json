@@ -1,0 +1,966 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Bilioteca Online API",
+    "description": "API para cadastrar e emprestar livros entre os usuários.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "O Desenvolvedor",
+      "email": "maxjunior20012300@gmail.com"
+    }
+  },
+  "basePath": "/",
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "API local de testes"
+    }
+  ],
+  "paths": {
+    "/usuarios": {
+      "post": {
+        "summary": "Cadastra um novo usuário",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Usuario existente",
+            "content": {
+              "application/json": {
+                "example": "Usuário já existe"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar o cadastro",
+            "content": {
+              "application/json": {
+                "example": "Falha ao cadastrar usuário"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Busca dados do usuário",
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "example": "Usuário não encontrado"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel buscar os dados",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel buscar os dados"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Atulaiza dados do usuário",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Usuário atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuario"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar a atualização",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel atualizar o usuário"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Exclui dados do usuário",
+        "responses": {
+          "202": {
+            "description": "Usuário deletado com sucesso",
+            "content": {
+              "application/json": {
+                "example": "Usuário deletado com sucesso"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar o delete",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel deletar o usuário"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/usuarios/login": {
+      "post": {
+        "summary": "Realiza login no sistema",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Senha inválida",
+            "content": {
+              "application/json": {
+                "example": "Senha inválida"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar o Login",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel logar no sistema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/livros": {
+      "post": {
+        "summary": "Busca livro por titulo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "titulo": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Livro encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Livro"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi possivel encontrar o livro",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel encontrar o livro."
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel buscar os dados",
+            "content": {
+              "application/json": {
+                "example": "Falha ao buscar dados"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/livros/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Busca livro por id",
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Livro"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Livro não encontrado",
+            "content": {
+              "application/json": {
+                "example": "Livro não encontrado"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel buscar os dados",
+            "content": {
+              "application/json": {
+                "example": "Falha ao buscar dados"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Atulaiza dados do livro",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "titulo": {
+                    "type": "string"
+                  },
+                  "resumo": {
+                    "type": "string"
+                  },
+                  "proprietario": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Livro atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Livro"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar a atualização",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel atualizar o usuário"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Exclui livro",
+        "responses": {
+          "202": {
+            "description": "Livro deletado com sucesso",
+            "content": {
+              "application/json": {
+                "example": "Livro deletado com sucesso"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar o delete",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel deletar o livro"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/livros/all": {
+      "get": {
+        "summary": "Busca todos os livros",
+        "responses": {
+          "201": {
+            "description": "Livros encontrados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Livros"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi possivel encontrar os livros",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel encontrar os livros"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi buscar os dados",
+            "content": {
+              "application/json": {
+                "example": "Falha ao buscar dados"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/livros/usuarios/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "post": {
+        "summary": "Cadastra um novo livro",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "titulo": {
+                    "type": "string"
+                  },
+                  "resumo": {
+                    "type": "string"
+                  },
+                  "proprietario": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Livro"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar o cadastro",
+            "content": {
+              "application/json": {
+                "example": "Falha ao cadastrar livro"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/livros/usuarios/all": {
+      "post": {
+        "summary": "Busca todos os livros do usuario",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "proprietario": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Livros encontrados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Livros"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi possivel encontrar os livros",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel encontrar os livros"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi buscar os dados",
+            "content": {
+              "application/json": {
+                "example": "Falha ao buscar dados"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/emprestimos": {
+      "post": {
+        "summary": "Cadastra um novo emprestimo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "livro": {
+                    "type": "string"
+                  },
+                  "dono": {
+                    "type": "string"
+                  },
+                  "emprestado": {
+                    "type": "string"
+                  },
+                  "data": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Emprestimo"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar o cadastro",
+            "content": {
+              "application/json": {
+                "example": "Falha ao cadastrar emprestimo"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/emprestimos/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Busca emprestimo por id",
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Emprestimo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Emprestimo não encontrado",
+            "content": {
+              "application/json": {
+                "example": "Emprestimo não encontrado"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel buscar os dados",
+            "content": {
+              "application/json": {
+                "example": "Falha ao buscar dados"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Atulaiza emprestimo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "titulo": {
+                    "type": "string"
+                  },
+                  "resumo": {
+                    "type": "string"
+                  },
+                  "proprietario": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Emprestimo atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Emprestimo"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar a atualização",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel atualizar o emprestimo"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Exclui emprestimo",
+        "responses": {
+          "202": {
+            "description": "Emprestimo deletado com sucesso",
+            "content": {
+              "application/json": {
+                "example": "Emprestimo deletado com sucesso"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel realizar o delete",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel deletar o emprestimo"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/emprestimos/all": {
+      "get": {
+        "summary": "Busca todos os emprestimos",
+        "responses": {
+          "201": {
+            "description": "Emprestimos encontrados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Emprestimos"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Não foi possivel encontrar os emprestimos",
+            "content": {
+              "application/json": {
+                "example": "Não foi possivel encontrar os emprestimos"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi buscar os dados",
+            "content": {
+              "application/json": {
+                "example": "Falha ao buscar dados"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/emprestimos/usuarios/dono/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Busca emprestimos por id do dono",
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Emprestimos"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Emprestimo não encontrado",
+            "content": {
+              "application/json": {
+                "example": "Emprestimo não encontrado"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel buscar os dados",
+            "content": {
+              "application/json": {
+                "example": "Falha ao buscar dados"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/emprestimos/usuarios/emprestado/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Busca emprestimo por id do emprestado",
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Emprestimo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Emprestimo não encontrado",
+            "content": {
+              "application/json": {
+                "example": "Emprestimo não encontrado"
+              }
+            }
+          },
+          "500": {
+            "description": "Não foi possivel buscar os dados",
+            "content": {
+              "application/json": {
+                "example": "Falha ao buscar dados"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "_id": {
+            "type": "string"
+          }
+        }
+      },
+      "Livro": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "resumo": {
+            "type": "string"
+          },
+          "proprietario": {
+            "type": "string"
+          }
+        }
+      },
+      "Livros": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Livro"
+        }
+      },
+      "Emprestimo": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "livro": {
+            "type": "string"
+          },
+          "dono": {
+            "type": "string"
+          },
+          "emprestado": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          }
+        }
+      },
+      "Emprestimos": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Emprestimo"
+        }
+      }
+    },
+    "securitySchemes": {
+      "auth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

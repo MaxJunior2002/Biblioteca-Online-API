@@ -1,6 +1,8 @@
 import express from "express";
 import db from "../config/dbConnect.js";
 import routes from "../routes/index.js";
+import swaggerUI from "swagger-ui-express";
+import swaggerDocument from "../swagger.json" assert {type: "json"};
 
 const app = express();
 
@@ -9,7 +11,7 @@ db.once("open", () => {
     console.log("Conexão com banco realizada com sucesso!");
 })
 
-app.use(express.json());
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 routes(app);
 
 export default app;
