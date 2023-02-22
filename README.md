@@ -24,7 +24,7 @@ npm install nodemon
 ```
 
 ##### 5. Conexão com o banco de dados 
-- Acesse <a href="https://www.mongodb.com/cloud/atlas/register" target="_blank">MongoDB Atlas</a>
+- Acesse <a href="https://www.mongodb.com/cloud/atlas/register" target="blank">MongoDB Atlas</a>
 - Faça login no site ou crie uma conta
 - Em Database crie o seu Cluster
 - No Cluster clique em Connect -> Connect your application
