@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-mongoose.connect("mongodb+srv://max:1234@cluster0.orjtldw.mongodb.net/");
+mongoose.connect("CODIGO DE CONEXÃO");
 
 let db = mongoose.connection;
 
